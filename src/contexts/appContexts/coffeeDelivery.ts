@@ -146,14 +146,6 @@ export const coffeeDeliery: AppType = {
             price: 9.9
         },
         {
-            id: `a14`,
-            name: "Irlandês",
-            description: "Bebida a base de café, uísque irlandês, açúcar e chantilly",
-            image: "/coffee-delivery/products/irlandes.png",
-            tags: ["Especial", "Alcoólico"],
-            price: 9.9
-        },
-        {
             id: `a15`,
             name: "Café Coado",
             description: "Café tradicional feito com coador igual o cafézinho de vó",

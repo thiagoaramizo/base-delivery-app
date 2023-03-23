@@ -1,6 +1,5 @@
-import { createContext, ReactNode, useReducer } from 'react'
-import { CartType } from '../@types/CartType'
-import { coffeeDeliery } from './appContexts/coffeeDelivery'
+import { createContext, ReactNode, useReducer, useState } from 'react'
+import { CartProductType, CartType } from '../@types/CartType'
 
 
 export const CartContext = createContext({} as CartType)
@@ -9,32 +8,125 @@ interface contextProviderProps {
   children: ReactNode
 }
 
+interface ActionCartType {
+  type: string,
+  payload: any
+}
+
 export function CartContextProvider({ children }: contextProviderProps) {
+
+  const addToCart = ( product: CartProductType ) => {
+    dispatch({
+      type: 'addProduct',
+      payload: {
+        product: product
+      }
+    })
+  }
+
+  const editProductOnCart = ( product: CartProductType ) => {
+    dispatch({
+      type: 'editProduct',
+      payload: {
+        product: product
+      }
+    })
+  }
+
+  const removeProductOfCart = ( product: CartProductType ) => {
+    dispatch({
+      type: 'removeProduct',
+      payload: {
+        product: product
+      }
+    })
+  }
+
+  const setPaymentMethod = ( paymentMethod: string ) => {
+    dispatch({
+      type: 'setPaymentMethod',
+      payload: {
+        paymentMethod: paymentMethod
+      }
+    })
+  }
 
   const [cartState, dispatch] = useReducer(
     //Actions
-    (state: CartType, action: any) => {
-      if (action.type === 'NomeDaAcao') {
+    (state: CartType, action: ActionCartType) => {
+      
+      if (action.type === 'addProduct') { 
+        
+        const newProduct =  action.payload.product as CartProductType
+
+        const productAlreadyExists = state.products.findIndex((p) => newProduct.id === p.id ) > -1 ? true : false
+        const newProducts =  productAlreadyExists ? 
+          (
+            state.products.map<CartProductType>((prod) => {
+              if( newProduct.id === prod.id) {
+                return { ...newProduct, quantity: (newProduct.quantity + prod.quantity) }
+              } else {
+                console.log(prod) 
+                return prod
+              }
+            })
+          ) : [ ...state.products, newProduct]
+                
         return {
-          ...state
-          // Definir o que fazer
+          ...state,
+          products: newProducts,
         }
-      } else return state
+      } 
+      
+      else if (action.type === 'editProduct') { 
+        const newProducts =  state.products.map<CartProductType>((prod) => {
+          if( action.payload.product.id === prod.id) {
+            return action.payload.product
+          } else{
+            return prod
+          }
+        })
+        return {
+          ...state,
+          products: newProducts,
+        }
+      } 
+
+      else if (action.type === 'removeProduct') { 
+        const newProduct =  action.payload.product as CartProductType
+        const products = [...state.products]
+        //@ts-ignore
+        const newProducts =  products.filter<CartProductType>( (prod) => (newProduct.id !== prod.id) )
+        return {
+          ...state,
+          products: newProducts,
+        }
+      }
+
+      else if (action.type === 'setPaymentMethod') { 
+        return {
+          ...state,
+          payMethod: action.payload.paymentMethod,
+        }
+      } 
+      
+      else return state
     },
     //Estado padrão inicial
     {
-      totalProducts: 0,
-      totalPrice: 0,
       shipPrice: 10,
-      totalProductsPrice: 0,
       stauts: 'cart',
-      products: []
+      products: [],
+      addToCart: addToCart,
+      editProductOnCart: editProductOnCart,
+      removeProductOfCart: removeProductOfCart,
+      setPaymentMethod: setPaymentMethod
     }
   )
 
   return (
     <CartContext.Provider
-      value={{ ...cartState }}
+      value={{ ...cartState, addToCart: addToCart }}
     >
       {children}
     </CartContext.Provider>

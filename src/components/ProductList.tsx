@@ -1,20 +1,17 @@
+import { useContext } from "react"
 import styled from "styled-components"
+import { AppContext } from "../contexts/AppContext"
 import { ProductCard } from "./ProductCard"
 
 export function ProductList() {
 
+    const {products, appData} = useContext(AppContext)
+
     return (
       <Wrapper>
-        <h1>Nossos produtos</h1>
+        <h1>Nossos {appData.productsName || 'produtos'}</h1>
         <div className="productList">
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+          { products.map((product) => <ProductCard key={product.id} product={product} /> )}
         </div>
       </Wrapper>
     )
@@ -27,6 +24,11 @@ export function ProductList() {
         display: flex;
         gap: 2rem;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: flex-start;
+
+        @media (max-width: 768px) {
+          flex-direction: column;
+          gap: 1rem;
+        }
     }
   `

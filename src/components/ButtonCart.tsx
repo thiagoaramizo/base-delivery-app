@@ -6,7 +6,11 @@ import { CartContext } from "../contexts/CartContext";
 
 export function ButtonCart() {
 
-  const { totalProducts } = useContext(CartContext)
+  const { products } = useContext(CartContext)
+
+    const totalProducts = products.reduce((totalProducts, prod) => {
+      return totalProducts += prod.quantity
+    }, 0)
 
     return (
       <Wrapper>

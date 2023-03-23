@@ -1,22 +1,39 @@
+import { useContext, useState } from "react"
 import styled from "styled-components"
+import { ProductType } from "../@types/ProductType"
+import { CartContext } from "../contexts/CartContext"
 import { ButtonAddCart } from "./ButtonAddCart"
 import { InputQuantity } from "./InputQuantity"
+import { Tag } from "./Tag"
 
-export function ProductCard() {
+interface ProductCardProps {
+  product: ProductType
+}
+
+export function ProductCard({product}: ProductCardProps) {
+
+  const { addToCart } = useContext(CartContext)
+  const [value, setValue] = useState(1)
+
+  const handleSubmit = ( e: React.FormEvent<HTMLFormElement> ) => {
+    e.preventDefault()
+    addToCart( {...product, quantity: value})
+  }
 
     return (
       <Wrapper>
-        <img src="./coffee-delivery/products/expresso.png" />
+        <img src={product.image} />
         <header>
-          <span>Tradicional</span>
-          <span>Com leite</span>
+          { product.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
         </header>
-        <h3>ProductCard</h3>
-        <p>O tradicional café feito com água quente e grãos moídos</p>
+        <h3>{product.name}</h3>
+        <p>{product.description}</p>
         <footer>
-          <div><span>R$</span>9,90</div>
-          <InputQuantity />
-          <ButtonAddCart />
+          <div className="price">R$<span>{product.price.toLocaleString(undefined,{minimumFractionDigits:2}) }</span></div>
+          <form onSubmit={handleSubmit}>
+            <InputQuantity value={value} setValue={setValue}/>
+            <ButtonAddCart />
+          </form>
         </footer>
       </Wrapper>
     )
@@ -39,9 +56,75 @@ export function ProductCard() {
       margin-top: -2.5rem;
     }
 
+    & header {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    & h3 {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+    }
+
+    & p {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: ${(props) => props.theme.color.textLight};
+      text-align: center;
+      line-height: 1.4;
+    }
+
     & footer {
+      width: 100%;
+      margin-top: 2rem;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+
+      & .price {
+        display: flex;
+        align-items: baseline;
+        gap: 0.2rem;
+        font-size: 0.875rem;
+
+        & span {
+          font-family: 'Baloo 2', sans-serif;
+          font-size: 1.5rem;
+        }
+      }
+
+      & form {
+        display: flex;
+        gap: 0.5rem;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      width: 100%;
+      margin-top: 0;
+      align-items: flex-start;
+      padding-left: 10rem;
+      position: relative;
+
+      & img {
+        margin-top: 0;
+        position: absolute;
+        left: 1rem;
+      }
+
+      & header {
+        margin-top: 0;
+      }
+
+      & h3, p { 
+        text-align: left;
+      }
+
+      & footer {
+        margin-top: 1rem;
+      }
     }
 
   `

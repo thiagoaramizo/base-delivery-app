@@ -5,4 +5,5 @@ export interface ProductType {
     image: string
     tags: string[]
     price: number
+    quantity?: number
 }

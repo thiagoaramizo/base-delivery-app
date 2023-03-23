@@ -1,18 +1,18 @@
 import { ProductType } from "./ProductType"
 
-interface CartProduct {
-    product: ProductType,
+export interface CartProductType extends ProductType {
     quantity: number
 }
 
 export interface CartType {
-    totalProducts: number,
-    totalPrice: number,
     shipPrice: number,
-    totalProductsPrice: number,
     stauts: string,
-    products: CartProduct[],
+    products: CartProductType[],
     address?: any,
     payMethod?: string,
     timeToDelivery?: Date,
+    addToCart: ( product: CartProductType ) => void
+    editProductOnCart: ( product: CartProductType ) => void
+    removeProductOfCart: ( product: CartProductType ) => void
+    setPaymentMethod: ( paymentMethod: string ) => void
 }

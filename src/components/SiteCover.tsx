@@ -46,7 +46,7 @@ export function SiteCover() {
         justify-content: space-between;
         flex-direction: row-reverse;
         gap: 3.5rem;
-        @media (max-width: 768px) {
+        @media (max-width: 1180px) {
             flex-direction: column;
         }
 
@@ -60,7 +60,7 @@ export function SiteCover() {
                 font-size: 3rem;
                 padding-bottom: 1rem;
                 line-height: 1.3;
-                @media (max-width: 768px) {
+                @media (max-width: 1180px) {
                     text-align: center;
                     font-size: 2.5rem;
                 }
@@ -69,7 +69,7 @@ export function SiteCover() {
             & p {
                 font-size: 1.25rem;
                 line-height: 1.3;
-                @media (max-width: 768px) {
+                @media (max-width: 1180px) {
                     text-align: center;
                 }
             }
@@ -79,6 +79,10 @@ export function SiteCover() {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 1rem 2rem;
+
+                @media (max-width: 768px) {
+                    grid-template-columns: 1fr;  
+                }
 
                 & div {
                     display: flex;
